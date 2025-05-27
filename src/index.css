@@ -9,6 +9,10 @@
 .custom-scroll::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+html, body {
+  overflow-x: hidden;
+}
+
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
