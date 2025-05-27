@@ -2,8 +2,8 @@ import React, { useState, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Alerts from './components/Alerts';
-import ManageStores from './components/ManageStores';
-import StoreDetails from './components/StoreDetails';
+import ManageStores from './components/ManageStore/ManageStores';
+import StoreDetails from './components/ManageStore/StoreDetails';
 import Dashboard from './components/Dashbord/dashbord';
 
 // Placeholder components for unhandled menu items
