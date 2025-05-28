@@ -49,8 +49,8 @@ const AdRevenue = () => {
                   border: 'none',
                 }}
               />
-              <Bar dataKey="type2" stackId="a" fill="#C5C5C5FF" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="type3" stackId="a" fill="#949191FF" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="type2" stackId="a" fill="#97E8DAFF" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="type3" stackId="a" fill="#B2F5EA" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

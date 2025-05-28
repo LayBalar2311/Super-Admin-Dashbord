@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore }) => {
+const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore, activePage }) => { // 1. Receive activePage prop
   const menus = [
     'Dashboard',
     'Manage Stores',
@@ -36,15 +36,19 @@ const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore }) => {
           </svg>
         </button>
       </div>
-      {menus.map((menu, idx) => (
-        <div
-          key={idx}
-          className="p-3 rounded-lg bg-stone-50 text-gray-700 hover:bg-amber-50 hover:text-gray-900 hover:scale-[1.02] hover:shadow-md cursor-pointer transition-all duration-300 ease-in-out"
-          onClick={() => handleMenuClick(menu)}
-        >
-          {menu}
-        </div>
-      ))}
+      <nav> {/* Use a nav element for semantic correctness */}
+        {menus.map((menu, idx) => (
+          <div
+            key={idx}
+            className={`p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-gray-900 hover:scale-[1.02] hover:shadow-md cursor-pointer transition-all duration-300 ease-in-out mb-2
+              ${activePage === menu ? 'bg-amber-100 text-gray-900 font-semibold shadow-md' : 'bg-stone-50'}` // 2. Conditional styling
+            }
+            onClick={() => handleMenuClick(menu)}
+          >
+            {menu}
+          </div>
+        ))}
+      </nav>
       <div className="absolute bottom-4 left-4 text-sm text-gray-600 hover:text-amber-800 hover:scale-[1.02] cursor-pointer transition-all duration-300 ease-in-out">
         Exit
       </div>

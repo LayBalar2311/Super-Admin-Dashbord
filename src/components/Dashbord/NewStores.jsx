@@ -48,7 +48,7 @@ const NewStores = () => {
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="#000000"
+                stroke="#B2F5EA"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorValue)"

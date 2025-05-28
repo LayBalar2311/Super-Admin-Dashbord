@@ -15,7 +15,7 @@ const placeholder = (name) => (
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
-  const [activePage, setActivePage] = useState('Dashboard');
+  const [activePage, setActivePage] = useState('Dashboard'); // State to track active page
   const [selectedStore, setSelectedStore] = useState(null);
 
   const toggleSidebar = useCallback(() => {
@@ -33,6 +33,7 @@ export default function App() {
 
   const renderContent = () => {
     if (selectedStore) {
+      // Pass the current active page to StoreDetails if needed for breadcrumbs or context
       return <StoreDetails store={selectedStore} goBack={() => setSelectedStore(null)} />;
     }
 
@@ -59,46 +60,60 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-stone-50 font-sans relative overflow-hidden">
-      {/* Header */}
+    // 1. Overall flex container for the app
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-white to-stone-50 font-sans relative">
+      {/* 2. Header - Fixed at the top */}
       <div className="fixed top-0 left-0 w-full z-30 bg-white shadow-sm">
         <Header toggleSidebar={toggleSidebar} toggleAlerts={toggleAlerts} />
       </div>
 
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-40 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
-      >
-        <Sidebar
-          closeSidebar={closeSidebar}
-          setActivePage={setActivePage}
-          clearSelectedStore={() => setSelectedStore(null)}
-        />
-      </div>
+      {/* 3. Main Layout Container (fills remaining vertical space below header) */}
+      <div className="flex flex-1 pt-[64px] md:pt-[80px]"> {/* pt pushes content below fixed header */}
 
-      {/* Alerts */}
-      <div
-        className={`fixed top-0 right-0 h-full w-[320px] bg-white shadow-md z-40 transition-transform duration-300 ${
-          isAlertsOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <Alerts closeAlerts={closeAlerts} />
-      </div>
-
-      {/* Main Content */}
-      <div className="pt-[64px] md:pt-[80px] transition-all">
-        <div className="flex">
-          {/* Spacer for Sidebar */}
-          <div className="hidden md:block md:w-64" />
-          
-          <div className="flex-1 px-4 md:px-6 overflow-hidden">
-            <main className="overflow-y-auto max-h-[calc(100vh-80px)] pb-6">{renderContent()}</main>
+        {/* Sidebar - Fixed on the left, responsive hide/show */}
+        <div
+          // CORRECTED SYNTAX: All classes inside one template literal
+          className={`
+            fixed top-0 left-0 h-full w-64 bg-white shadow-md z-40
+            transition-transform duration-300
+            pt-[64px] md:pt-[80px]
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          `}
+        >
+          <div className="h-full overflow-y-auto"> {/* Ensure content in sidebar scrolls */}
+            <Sidebar
+              closeSidebar={closeSidebar}
+              setActivePage={setActivePage}
+              clearSelectedStore={() => setSelectedStore(null)}
+              activePage={activePage} // Pass activePage prop to Sidebar
+            />
           </div>
+        </div>
 
-          {/* Spacer for Alerts Panel */}
-          {isAlertsOpen && <div className="w-[320px] hidden md:block" />}
+        {/* Main Content Area - Takes remaining horizontal space */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Spacer for Sidebar on larger screens (pushes content right) */}
+          <div className="hidden md:block md:w-64 flex-shrink-0" />
+
+          {/* Actual content area that will scroll vertically */}
+          <main className="flex-1 p-4 md:p-6 overflow-y-auto">
+            {renderContent()}
+          </main>
+
+          {/* Alerts Panel - Fixed on the right, responsive hide/show */}
+          <div
+            // CORRECTED SYNTAX: All classes inside one template literal
+            className={`
+              fixed top-0 right-0 h-full w-[320px] bg-white shadow-md z-40
+              transition-transform duration-300
+              pt-[64px] md:pt-[80px]
+              ${isAlertsOpen ? 'translate-x-0' : 'translate-x-full'}
+            `}
+          >
+            <div className="h-full overflow-y-auto"> {/* Ensure content in alerts scrolls */}
+              <Alerts closeAlerts={closeAlerts} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
