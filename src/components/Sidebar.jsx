@@ -1,8 +1,13 @@
-import React from 'react';
+// components/Sidebar.jsx
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore, activePage }) => { // 1. Receive activePage prop
+const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore, activePage }) => {
+  const { user, hasPageAccess, logout } = useContext(AuthContext); // Added logout
+
   const menus = [
     'Dashboard',
+    'Verification',
     'Manage Stores',
     'Reports & Analytics',
     'Manage Offers',
@@ -10,11 +15,21 @@ const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore, activePage }
     'User Management',
     'Moderation / Reports',
     'Settings',
+    'UserAnalytics'
   ];
+
+  // Filter menus based on user permissions
+  const accessibleMenus = user?.role === 'admin' ? menus : menus.filter(menu => hasPageAccess(menu));
 
   const handleMenuClick = (menu) => {
     setActivePage(menu);
-    clearSelectedStore(); // Clear selectedStore to allow navigation
+    clearSelectedStore();
+    closeSidebar();
+  };
+
+  const handleLogout = () => {
+    console.log('Logout clicked'); // Debug log
+    logout(); // Call logout from AuthContext
     closeSidebar();
   };
 
@@ -36,21 +51,23 @@ const Sidebar = ({ closeSidebar, setActivePage, clearSelectedStore, activePage }
           </svg>
         </button>
       </div>
-      <nav> {/* Use a nav element for semantic correctness */}
-        {menus.map((menu, idx) => (
+      <nav>
+        {accessibleMenus.map((menu, idx) => (
           <div
             key={idx}
             className={`p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-gray-900 hover:scale-[1.02] hover:shadow-md cursor-pointer transition-all duration-300 ease-in-out mb-2
-              ${activePage === menu ? 'bg-amber-100 text-gray-900 font-semibold shadow-md' : 'bg-stone-50'}` // 2. Conditional styling
-            }
+              ${activePage === menu ? 'bg-amber-100 text-gray-900 font-semibold shadow-md' : 'bg-stone-50'}`}
             onClick={() => handleMenuClick(menu)}
           >
             {menu}
           </div>
         ))}
       </nav>
-      <div className="absolute bottom-4 left-4 text-sm text-gray-600 hover:text-amber-800 hover:scale-[1.02] cursor-pointer transition-all duration-300 ease-in-out">
-        Exit
+      <div
+        className="absolute bottom-4 left-4 text-sm text-gray-600 hover:text-amber-800 hover:scale-[1.02] cursor-pointer transition-all duration-300 ease-in-out"
+        onClick={handleLogout} // Fixed: Call handleLogout directly
+      >
+        Log Out
       </div>
     </div>
   );
